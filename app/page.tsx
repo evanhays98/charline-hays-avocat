@@ -5,7 +5,6 @@ import { FactsBar } from "@/components/facts-bar";
 import { DomainsSection } from "@/components/domains-section";
 import { AboutSection } from "@/components/about-section";
 import { ProcessSection } from "@/components/process-section";
-import { TimelineSection } from "@/components/timeline-section";
 import { FeesSection } from "@/components/fees-section";
 import { FaqSection } from "@/components/faq-section";
 import { ContactSection } from "@/components/contact-section";
@@ -14,7 +13,7 @@ import { SiteFooter } from "@/components/site-footer";
 const attorneyJsonLd = {
   "@context": "https://schema.org",
   "@type": "Attorney",
-  name: "Charline Hays",
+  name: "Charline HAYS",
   url: SITE_URL,
   image: `${SITE_URL}/portrait.jpg`,
   telephone: "+33615570055",
@@ -48,7 +47,6 @@ const HomePage = () => (
       <DomainsSection />
       <AboutSection />
       <ProcessSection />
-      <TimelineSection />
       <FeesSection />
       <FaqSection />
       <ContactSection />

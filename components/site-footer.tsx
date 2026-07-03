@@ -4,7 +4,7 @@ export const SiteFooter = () => (
   <footer className="bg-navy-deep text-mist">
     <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-7 py-7 text-[13px]">
       <span className="font-serif text-[15px] text-[#dde3ef]">
-        Charline Hays — Avocate au Barreau de Paris
+        Charline HAYS — Avocate au Barreau de Paris
       </span>
       <div className="flex gap-6">
         <Link

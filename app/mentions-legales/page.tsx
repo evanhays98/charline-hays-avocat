@@ -3,7 +3,7 @@ import { CONTACT } from "@/lib/content";
 import { LegalPage, type LegalBlock } from "@/components/legal-page";
 
 export const metadata: Metadata = {
-  title: "Mentions légales — Charline Hays, Avocate",
+  title: "Mentions légales — Charline HAYS, Avocate",
   robots: { index: false },
 };
 
@@ -11,7 +11,7 @@ const BLOCKS: LegalBlock[] = [
   {
     heading: "Éditeur du site",
     paragraphs: [
-      "Charline Hays, avocate inscrite au Barreau de Paris.",
+      "Charline HAYS, avocate inscrite au Barreau de Paris.",
       `Adresse professionnelle : ${CONTACT.address}.`,
       `Contact : ${CONTACT.email} — ${CONTACT.phone}.`,
       "[À compléter : numéro SIREN, case palais / toque.]",

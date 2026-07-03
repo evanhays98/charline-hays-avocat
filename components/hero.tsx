@@ -11,7 +11,7 @@ export const Hero = () => (
           Avocate au Barreau de Paris
         </p>
         <h1 className="mt-4 font-serif text-5xl font-medium leading-[1.05] text-white sm:text-6xl md:text-7xl">
-          Charline Hays
+          Charline HAYS
         </h1>
         <div className="mt-5 h-0.5 w-14 bg-gold" />
         <p className="mt-6 max-w-md text-lg text-[#c9d2e4]">
@@ -46,7 +46,7 @@ export const Hero = () => (
       <Reveal delay={0.15} className="relative max-w-90 md:justify-self-end">
         <Image
           src="/portrait.jpg"
-          alt="Portrait de Maître Charline Hays"
+          alt="Portrait de Maître Charline HAYS"
           width={503}
           height={690}
           priority

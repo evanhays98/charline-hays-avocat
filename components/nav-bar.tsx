@@ -5,7 +5,7 @@ export const NavBar = () => (
   <nav className="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur">
     <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-7">
       <a href="#haut" className="font-serif text-xl tracking-wide text-navy">
-        Charline Hays
+        Charline HAYS
       </a>
       <div className="flex items-center gap-6">
         {NAV_LINKS.map(({ href, label }) => (

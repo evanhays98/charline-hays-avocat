@@ -15,7 +15,7 @@ export const LegalPage = ({ title, blocks }: LegalPageProps) => (
     <nav className="border-b border-line">
       <div className="mx-auto flex h-16 max-w-3xl items-center justify-between px-7">
         <Link href="/" className="font-serif text-xl tracking-wide text-navy">
-          Charline Hays
+          Charline HAYS
         </Link>
         <Link
           href="/"

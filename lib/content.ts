@@ -13,12 +13,6 @@ export interface ProcessStep {
   description: string;
 }
 
-export interface TimelineEntry {
-  date: string;
-  title: string;
-  detail: string;
-}
-
 export interface FaqEntry {
   question: string;
   answer: string;
@@ -44,7 +38,6 @@ export const NAV_LINKS: NavLink[] = [
   { href: "#domaines", label: "Domaines" },
   { href: "#a-propos", label: "À propos" },
   { href: "#deroule", label: "Déroulé" },
-  { href: "#parcours", label: "Parcours" },
   { href: "#honoraires", label: "Honoraires" },
   { href: "#faq", label: "FAQ" },
 ];
@@ -104,45 +97,6 @@ export const PROCESS_STEPS: ProcessStep[] = [
     title: "Suivi",
     description:
       "Je vous accompagne et vous informe à chaque étape de la procédure.",
-  },
-];
-
-export const CAREER: TimelineEntry[] = [
-  {
-    date: "Depuis 2021",
-    title: "Avocate au Barreau de Paris",
-    detail:
-      "Exercice exclusif en droit de la famille : divorce, autorité parentale, liquidations, filiation, droit pénal de la famille.",
-  },
-  {
-    date: "2019",
-    title: "Tribunal judiciaire de Versailles",
-    detail:
-      "Pôle affaires familiales — participation aux audiences, rédaction de projets de décisions.",
-  },
-  {
-    date: "2018",
-    title: "Cour d'appel de Paris",
-    detail:
-      "Assistante de justice — assistance des magistrats, recherches juridiques.",
-  },
-];
-
-export const EDUCATION: TimelineEntry[] = [
-  {
-    date: "2021",
-    title: "Prestation de serment",
-    detail: "Barreau de Paris.",
-  },
-  {
-    date: "2020",
-    title: "CAPA — HEDAC",
-    detail: "École de formation des barreaux de la cour d'appel de Versailles.",
-  },
-  {
-    date: "2017",
-    title: "Master 2 Carrières judiciaires",
-    detail: "Université de Versailles Saint-Quentin-en-Yvelines.",
   },
 ];
 

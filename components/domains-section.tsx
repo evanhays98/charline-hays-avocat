@@ -11,7 +11,7 @@ export const DomainsSection = () => (
         <SectionHeading
           eyebrow="Domaines d'intervention"
           title="Le droit de la famille, exclusivement"
-          intro="J'interviens exclusivement en droit de la famille, devant les juridictions d'Île-de-France et les cours d'appel de Paris et de Versailles."
+          intro="J'interviens exclusivement en droit de la famille, devant les juridictions d'Île-de-France et les Cours d'appel de Paris et de Versailles."
         />
       </Reveal>
       <Stagger className="mt-12 grid md:grid-cols-2 md:gap-x-14">

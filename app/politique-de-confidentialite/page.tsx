@@ -3,7 +3,7 @@ import { CONTACT } from "@/lib/content";
 import { LegalPage, type LegalBlock } from "@/components/legal-page";
 
 export const metadata: Metadata = {
-  title: "Politique de confidentialité — Charline Hays, Avocate",
+  title: "Politique de confidentialité — Charline HAYS, Avocate",
   robots: { index: false },
 };
 
