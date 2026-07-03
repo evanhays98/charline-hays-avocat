@@ -1,10 +1,11 @@
 import { CONTACT } from "@/lib/content";
 import { RdvForm } from "@/components/rdv-form";
+import { Reveal } from "@/components/motion/reveal";
 
 export const ContactSection = () => (
   <section id="contact" className="scroll-mt-21 bg-navy text-[#edf0f7]">
     <div className="mx-auto grid max-w-5xl gap-12 px-7 py-16 md:grid-cols-2 md:gap-18 md:py-23">
-      <div>
+      <Reveal>
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-soft">
           Contact
         </p>
@@ -45,8 +46,10 @@ export const ContactSection = () => (
             {CONTACT.address}
           </div>
         </div>
-      </div>
-      <RdvForm />
+      </Reveal>
+      <Reveal delay={0.1}>
+        <RdvForm />
+      </Reveal>
     </div>
   </section>
 );

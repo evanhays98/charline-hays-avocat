@@ -1,4 +1,6 @@
 import { CONTACT } from "@/lib/content";
+import { Stagger } from "@/components/motion/stagger";
+import { StaggerItem } from "@/components/motion/stagger-item";
 
 interface Fact {
   label: string;
@@ -13,15 +15,17 @@ const FACTS: Fact[] = [
 
 export const FactsBar = () => (
   <div className="border-b border-line">
-    <div className="mx-auto grid max-w-5xl gap-4 px-7 py-6 md:grid-cols-3 md:gap-8">
+    <Stagger className="mx-auto grid max-w-5xl gap-4 px-7 py-6 md:grid-cols-3 md:gap-8">
       {FACTS.map(({ label, value }) => (
-        <p key={label} className="text-sm">
-          <span className="block text-[11.5px] font-semibold uppercase tracking-[0.18em] text-gold">
-            {label}
-          </span>
-          {value}
-        </p>
+        <StaggerItem key={label}>
+          <p className="text-sm">
+            <span className="block text-[11.5px] font-semibold uppercase tracking-[0.18em] text-gold">
+              {label}
+            </span>
+            {value}
+          </p>
+        </StaggerItem>
       ))}
-    </div>
+    </Stagger>
   </div>
 );

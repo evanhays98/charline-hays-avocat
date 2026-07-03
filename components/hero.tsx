@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { CONTACT } from "@/lib/content";
+import { Reveal } from "@/components/motion/reveal";
 
 export const Hero = () => (
   <header id="haut" className="bg-navy text-[#edf0f7]">
     <div className="mx-auto grid max-w-5xl gap-12 px-7 py-16 md:grid-cols-[1.15fr_0.85fr] md:items-center md:py-21">
-      <div>
+      <Reveal>
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-soft">
           Avocate au Barreau de Paris
         </p>
@@ -36,8 +37,8 @@ export const Hero = () => (
             Écrire un email
           </a>
         </div>
-      </div>
-      <div className="relative max-w-90 md:justify-self-end">
+      </Reveal>
+      <Reveal delay={0.15} className="relative max-w-90 md:justify-self-end">
         <Image
           src="/portrait.jpg"
           alt="Portrait de Maître Charline Hays"
@@ -48,7 +49,7 @@ export const Hero = () => (
         />
         <div className="pointer-events-none absolute -top-2 -left-2 h-9 w-9 border-l-[1.5px] border-t-[1.5px] border-gold" />
         <div className="pointer-events-none absolute -bottom-2 -right-2 h-9 w-9 border-b-[1.5px] border-r-[1.5px] border-gold" />
-      </div>
+      </Reveal>
     </div>
   </header>
 );

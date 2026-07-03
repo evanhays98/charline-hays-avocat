@@ -1,14 +1,17 @@
 import { FAQ_ENTRIES } from "@/lib/content";
 import { SectionHeading } from "@/components/section-heading";
+import { Reveal } from "@/components/motion/reveal";
 
 export const FaqSection = () => (
   <section id="faq" className="scroll-mt-21 border-t border-line py-23">
     <div className="mx-auto max-w-5xl px-7">
-      <SectionHeading
-        eyebrow="Questions fréquentes"
-        title="Vous vous demandez peut-être…"
-      />
-      <div className="mt-12">
+      <Reveal>
+        <SectionHeading
+          eyebrow="Questions fréquentes"
+          title="Vous vous demandez peut-être…"
+        />
+      </Reveal>
+      <Reveal className="mt-12">
         {FAQ_ENTRIES.map(({ question, answer }) => (
           <details
             key={question}
@@ -25,7 +28,7 @@ export const FaqSection = () => (
             </p>
           </details>
         ))}
-      </div>
+      </Reveal>
     </div>
   </section>
 );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mulish, Playfair_Display } from "next/font/google";
 import { SITE_URL } from "@/lib/content";
+import { MotionProvider } from "@/components/motion/motion-provider";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -36,7 +37,13 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
     className={`${playfair.variable} ${mulish.variable} antialiased`}
   >
     <body className="bg-paper font-sans text-[17px] leading-relaxed text-ink">
-      {children}
+      <noscript
+        dangerouslySetInnerHTML={{
+          __html:
+            "<style>.will-reveal{opacity:1 !important;transform:none !important}</style>",
+        }}
+      />
+      <MotionProvider>{children}</MotionProvider>
     </body>
   </html>
 );
