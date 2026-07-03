@@ -11,8 +11,16 @@ const BLOCKS: LegalBlock[] = [
   {
     heading: "Données collectées",
     paragraphs: [
-      "Ce site ne collecte aucune donnée personnelle et n'utilise aucun cookie de suivi.",
+      "Ce site n'utilise aucun cookie et ne stocke, sur ses propres serveurs, aucune donnée personnelle vous concernant. Une mesure d'audience anonyme est toutefois en place, décrite ci-dessous.",
       "Le formulaire de contact ouvre votre propre messagerie : les informations que vous saisissez ne transitent pas par ce site et n'y sont pas stockées.",
+    ],
+  },
+  {
+    heading: "Mesure d'audience",
+    paragraphs: [
+      "Ce site utilise PostHog pour mesurer sa fréquentation de façon anonyme : pages consultées, clics sur les liens d'appel et d'email, démarrage et envoi du formulaire de contact. Ces statistiques sont agrégées et ne permettent pas de vous identifier.",
+      "La mesure est réalisée sans cookie, sans profilage et sans suivi entre sites ; le contenu que vous saisissez dans le formulaire n'est jamais transmis. Les données sont hébergées dans l'Union européenne (Francfort, Allemagne) et le signal « Ne pas me pister » (Do Not Track) de votre navigateur est respecté.",
+      "Cette mesure d'audience anonyme repose sur l'intérêt légitime à comprendre l'usage du site et à l'améliorer.",
     ],
   },
   {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Mulish, Playfair_Display } from "next/font/google";
 import { SITE_URL } from "@/lib/content";
 import { MotionProvider } from "@/components/motion/motion-provider";
+import { PostHogInit } from "@/components/analytics/posthog-init";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -43,6 +44,7 @@ const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
             "<style>.will-reveal{opacity:1 !important;transform:none !important}</style>",
         }}
       />
+      <PostHogInit />
       <MotionProvider>{children}</MotionProvider>
     </body>
   </html>

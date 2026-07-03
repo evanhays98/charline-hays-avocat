@@ -1,4 +1,5 @@
 import { NAV_LINKS } from "@/lib/content";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 
 export const NavBar = () => (
   <nav className="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur">
@@ -16,12 +17,14 @@ export const NavBar = () => (
             {label}
           </a>
         ))}
-        <a
+        <TrackedLink
           href="#contact"
+          event="rdv_cta_clic"
+          properties={{ emplacement: "nav" }}
           className="bg-navy px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-paper transition-colors hover:bg-navy-deep"
         >
           Prendre rendez-vous
-        </a>
+        </TrackedLink>
       </div>
     </div>
   </nav>

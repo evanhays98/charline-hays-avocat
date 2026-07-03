@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CONTACT } from "@/lib/content";
 import { Reveal } from "@/components/motion/reveal";
+import { TrackedLink } from "@/components/analytics/tracked-link";
 
 export const Hero = () => (
   <header id="haut" className="bg-navy text-[#edf0f7]">
@@ -24,18 +25,22 @@ export const Hero = () => (
           internationaux d'enfants
         </p>
         <div className="mt-9 flex flex-wrap gap-3.5">
-          <a
+          <TrackedLink
             href={CONTACT.phoneHref}
+            event="appel_clic"
+            properties={{ emplacement: "hero" }}
             className="bg-white px-6 py-4 text-[13px] font-semibold uppercase tracking-widest text-navy transition-colors hover:bg-gold-soft"
           >
             Appeler — {CONTACT.phone}
-          </a>
-          <a
+          </TrackedLink>
+          <TrackedLink
             href={`mailto:${CONTACT.email}`}
+            event="email_clic"
+            properties={{ emplacement: "hero" }}
             className="border border-white/45 px-6 py-4 text-[13px] font-semibold uppercase tracking-widest text-white transition-colors hover:border-gold-soft hover:text-gold-soft"
           >
             Écrire un email
-          </a>
+          </TrackedLink>
         </div>
       </Reveal>
       <Reveal delay={0.15} className="relative max-w-90 md:justify-self-end">

@@ -1,7 +1,8 @@
 "use client";
 
-import type { FormEvent } from "react";
+import { useRef, type FormEvent } from "react";
 import { CONTACT } from "@/lib/content";
+import { trackEvent } from "@/lib/track";
 
 interface RdvFormValues {
   nom: string;
@@ -36,14 +37,27 @@ const labelClass =
   "mt-4.5 mb-1.5 block text-[11.5px] uppercase tracking-[0.16em] text-mist first:mt-0";
 
 export const RdvForm = () => {
+  const started = useRef(false);
+
+  const handleStart = () => {
+    if (started.current) return;
+    started.current = true;
+    trackEvent("formulaire_demarre");
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    window.location.href = buildMailtoHref(readFormValues(event.currentTarget));
+    const values = readFormValues(event.currentTarget);
+    trackEvent("formulaire_envoye", {
+      telephone_renseigne: values.tel.length > 0,
+    });
+    window.location.href = buildMailtoHref(values);
   };
 
   return (
     <form
       onSubmit={handleSubmit}
+      onInput={handleStart}
       className="self-start border border-white/15 p-9"
     >
       <h3 className="mb-6 font-serif text-2xl font-medium text-white">
