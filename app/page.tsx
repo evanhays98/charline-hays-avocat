@@ -20,8 +20,8 @@ const attorneyJsonLd = {
   email: CONTACT.email,
   address: {
     "@type": "PostalAddress",
-    streetAddress: "47 avenue Hoche",
-    postalCode: "75008",
+    streetAddress: "156 avenue Victor Hugo",
+    postalCode: "75116",
     addressLocality: "Paris",
     addressCountry: "FR",
   },

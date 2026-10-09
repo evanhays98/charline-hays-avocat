@@ -22,10 +22,10 @@ Site vitrine one-page (Next.js App Router, export statique, Tailwind v4). Aucun 
 
 ## Contraintes métier
 - Ne jamais employer « spécialiste » (réservé au certificat de spécialisation) — dire « domaines d'intervention ».
-- Site au nom propre de Charline Hays, indépendante : ne pas présenter le cabinet Darmon comme employeur ; l'adresse (47 avenue Hoche, 75008 Paris) n'est que le lieu de rendez-vous.
+- Site au nom propre de Charline Hays, indépendante : ne pas présenter le cabinet Darmon comme employeur ; l'adresse (156 avenue Victor Hugo, 75116 Paris) n'est que le lieu de rendez-vous.
 - `output: "export"` : toute route metadata (robots/sitemap) doit être `force-static` ; images non optimisées.
 
 ## À compléter avant mise en ligne
 - Mentions légales : SIREN, toque, assureur RCP, hébergeur (placeholders `[À compléter…]`).
-- Réserver le domaine `charlinehays-avocat.fr` et créer l'email `contact@charlinehays-avocat.fr`.
+- Réserver le domaine `haysavocat.fr` et créer l'email `charlinehays@haysavocat.fr`.
 - Remplacer `public/portrait.jpg` (extrait du scan du CV) par la photo originale.

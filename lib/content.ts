@@ -25,13 +25,13 @@ export interface ContactDetails {
   address: string;
 }
 
-export const SITE_URL = "https://charlinehays-avocat.fr";
+export const SITE_URL = "https://haysavocat.fr";
 
 export const CONTACT: ContactDetails = {
   phone: "06 15 57 00 55",
   phoneHref: "tel:+33615570055",
-  email: "contact@charlinehays-avocat.fr",
-  address: "47 avenue Hoche, 75008 Paris",
+  email: "charlinehays@haysavocat.fr",
+  address: "156 avenue Victor Hugo, 75116 Paris",
 };
 
 export const NAV_LINKS: NavLink[] = [
