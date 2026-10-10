@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { fetchIsAdmin } from "@/lib/admin-api";
 import { useAuth } from "@/lib/use-auth";
 import { registerAdminWorker } from "@/lib/push-client";
+import "@/lib/install-prompt";
 import { useQuery } from "@/lib/use-query";
 import { AuthCard } from "@/components/admin/auth-card";
 import { AdminButton } from "@/components/admin/admin-button";

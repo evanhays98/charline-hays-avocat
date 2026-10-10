@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { LogoMark } from "@/components/logo-mark";
+import { InstallAppButton } from "@/components/admin/install-app-button";
 
 interface AuthCardProps {
   title: string;
@@ -18,6 +19,9 @@ export const AuthCard = ({ title, children }: AuthCardProps) => (
       </h1>
       <div className="mt-1.5 h-0.5 w-10 bg-gold" />
       <div className="mt-6">{children}</div>
+      <div className="mt-6 grid empty:hidden">
+        <InstallAppButton tone="light" />
+      </div>
     </div>
   </main>
 );
