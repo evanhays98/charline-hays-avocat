@@ -28,9 +28,8 @@ Site vitrine one-page (Next.js App Router, export statique, Tailwind v4) avec de
 - Secret professionnel : ne stocker que le strict nécessaire à la prise de rendez-vous.
 - Tester avec `npm run dev:test` (base locale, emails capturés par Mailpit) ; ne jamais tester sur la production. Valeurs locales des fonctions dans `supabase/functions/.env`, jamais dans `[edge_runtime.secrets]` (poussées en prod par `supabase secrets set`).
 
-## À compléter avant mise en ligne
-- Mentions légales : SIREN, toque, assureur RCP, hébergeur (placeholders `[À compléter…]`).
-- Réserver le domaine `haysavocat.fr` et l'authentifier dans Brevo (expéditeur `rendez-vous@haysavocat.fr`). Email de contact provisoire : `charlinehays.avocat@gmail.com` (Google Workspace à décider).
-- Créer le projet Supabase (région UE), déployer migrations et fonctions, créer le compte admin (voir `README.md`).
-- Remettre `NOTIFY_EMAIL` sur l'adresse de Charline (actuellement redirigé vers le développeur) et supprimer les demandes de test de la base de production.
+## À compléter
+- Mentions légales : SIREN, toque, assureur RCP, hébergeur (placeholders `[À compléter…]`) ; durée de conservation des demandes dans la politique de confidentialité.
+- Email de contact provisoire : `charlinehays.avocat@gmail.com` (Google Workspace à décider). Les emails partent de `rendez-vous@haysavocat.fr` (domaine authentifié dans Brevo).
+- Mesure d'audience : ajouter `NEXT_PUBLIC_POSTHOG_KEY` dans Vercel pour l'activer (désactivée sans clé, jamais active sur `/admin`).
 - Remplacer `public/portrait.jpg` (extrait du scan du CV) par la photo originale.
