@@ -23,3 +23,10 @@ html {
     scroll-behavior: auto;
   }
 }
+
+@keyframes rdv-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

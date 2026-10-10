@@ -1,59 +1,41 @@
 import Image from "next/image";
-import { CONTACT } from "@/lib/content";
 import { Reveal } from "@/components/motion/reveal";
-import { TrackedLink } from "@/components/analytics/tracked-link";
+import { SituationPicker } from "@/components/situation-picker";
 
 export const Hero = () => (
-  <header id="haut" className="bg-navy text-[#edf0f7]">
-    <div className="mx-auto grid max-w-5xl gap-12 px-7 py-16 md:grid-cols-[1.15fr_0.85fr] md:items-center md:py-21">
-      <Reveal>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-soft">
-          Avocate au Barreau de Paris
+  <header id="haut" className="relative overflow-hidden bg-navy text-[#edf0f7]">
+    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_85%_10%,rgba(201,174,107,0.1),transparent_60%)]" />
+    <div className="relative mx-auto grid max-w-5xl md:grid-cols-[1.2fr_0.8fr] md:items-center md:gap-14 md:px-7 md:py-20">
+      <Reveal
+        delay={0.1}
+        className="relative md:order-2 md:w-full md:max-w-82 md:justify-self-end"
+      >
+        <div className="relative aspect-[4/4.4] max-h-[72svh] w-full overflow-hidden md:aspect-[503/640] md:max-h-none">
+          <Image
+            src="/portrait.jpg"
+            alt="Portrait de Maître Charline HAYS"
+            width={503}
+            height={690}
+            priority
+            className="size-full object-cover object-top"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-navy via-navy/70 to-transparent md:hidden" />
+        </div>
+        <div className="pointer-events-none absolute -top-2 -left-2 hidden size-9 border-t-[1.5px] border-l-[1.5px] border-gold md:block" />
+        <div className="pointer-events-none absolute -right-2 -bottom-2 hidden size-9 border-r-[1.5px] border-b-[1.5px] border-gold md:block" />
+      </Reveal>
+      <Reveal className="relative z-10 -mt-28 px-7 pb-12 md:order-1 md:mt-0 md:px-0 md:pb-0">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-gold-soft">
+          Avocate au Barreau de Paris · Droit de la famille
         </p>
-        <h1 className="mt-4 font-serif text-5xl font-medium leading-[1.05] text-white sm:text-6xl md:text-7xl">
+        <h1 className="mt-3.5 font-serif text-5xl leading-[1.02] font-medium text-white sm:text-6xl md:text-7xl">
           Charline HAYS
         </h1>
-        <div className="mt-5 h-0.5 w-14 bg-gold" />
-        <p className="mt-6 max-w-md text-lg text-[#c9d2e4]">
-          Un accompagnement humain et rigoureux, à chaque étape de votre vie
-          familiale. Divorce, enfants, patrimoine : je défends vos intérêts en
-          privilégiant les solutions amiables et, lorsqu'il le faut, devant les
-          tribunaux.
+        <p className="mt-4.5 max-w-[30ch] font-serif text-xl leading-snug text-[#d5dcea] md:text-[23px]">
+          Divorce, enfants, patrimoine : un accompagnement humain et rigoureux.
         </p>
-        <p className="mt-5 text-[13px] uppercase tracking-[0.12em] text-mist">
-          Droit de la famille · Divorce · Filiation · Enlèvements
-          internationaux d'enfants
-        </p>
-        <div className="mt-9 flex flex-wrap gap-3.5">
-          <TrackedLink
-            href={CONTACT.phoneHref}
-            event="appel_clic"
-            properties={{ emplacement: "hero" }}
-            className="bg-white px-6 py-4 text-[13px] font-semibold uppercase tracking-widest text-navy transition-colors hover:bg-gold-soft"
-          >
-            Appeler — {CONTACT.phone}
-          </TrackedLink>
-          <TrackedLink
-            href={`mailto:${CONTACT.email}`}
-            event="email_clic"
-            properties={{ emplacement: "hero" }}
-            className="border border-white/45 px-6 py-4 text-[13px] font-semibold uppercase tracking-widest text-white transition-colors hover:border-gold-soft hover:text-gold-soft"
-          >
-            Écrire un email
-          </TrackedLink>
-        </div>
-      </Reveal>
-      <Reveal delay={0.15} className="relative max-w-90 md:justify-self-end">
-        <Image
-          src="/portrait.jpg"
-          alt="Portrait de Maître Charline HAYS"
-          width={503}
-          height={690}
-          priority
-          className="w-full object-cover"
-        />
-        <div className="pointer-events-none absolute -top-2 -left-2 h-9 w-9 border-l-[1.5px] border-t-[1.5px] border-gold" />
-        <div className="pointer-events-none absolute -bottom-2 -right-2 h-9 w-9 border-b-[1.5px] border-r-[1.5px] border-gold" />
+        <div className="mt-5.5 h-0.5 w-14 bg-gold" />
+        <SituationPicker />
       </Reveal>
     </div>
   </header>

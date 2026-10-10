@@ -6,9 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dev:test": "bash scripts/dev-test.sh",
+    "db:reset": "npx --yes supabase@2.120.0 db reset",
+    "db:stop": "npx --yes supabase@2.120.0 stop",
+    "db:types": "npx --yes supabase@2.120.0 gen types typescript --local > lib/database.types.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "2.117.3",
+    "lucide-react": "1.54.0",
     "motion": "^12.42.2",
     "next": "16.2.10",
     "posthog-js": "^1.396.6",

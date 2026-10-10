@@ -9,6 +9,7 @@ import { FeesSection } from "@/components/fees-section";
 import { FaqSection } from "@/components/faq-section";
 import { ContactSection } from "@/components/contact-section";
 import { SiteFooter } from "@/components/site-footer";
+import { MobileActionBar } from "@/components/mobile-action-bar";
 
 const attorneyJsonLd = {
   "@context": "https://schema.org",
@@ -52,6 +53,7 @@ const HomePage = () => (
       <ContactSection />
     </main>
     <SiteFooter />
+    <MobileActionBar />
   </>
 );
 

@@ -4,7 +4,7 @@ import { SITE_URL } from "@/lib/content";
 export const dynamic = "force-static";
 
 const robots = (): MetadataRoute.Robots => ({
-  rules: { userAgent: "*", allow: "/" },
+  rules: { userAgent: "*", allow: "/", disallow: "/admin" },
   sitemap: `${SITE_URL}/sitemap.xml`,
 });
 
