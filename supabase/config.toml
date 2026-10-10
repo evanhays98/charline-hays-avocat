@@ -428,7 +428,7 @@ project_id = "opxcfobcrnoveaxwlvjh"
 
 [remotes.production.auth]
 site_url = "https://haysavocat.fr"
-additional_redirect_urls = ["https://haysavocat.fr/admin", "http://localhost:3000/admin"]
+additional_redirect_urls = ["https://haysavocat.fr/admin", "https://www.haysavocat.fr/admin", "http://localhost:3000/admin"]
 enable_signup = false
 
 [remotes.production.auth.email]
