@@ -3,7 +3,8 @@ import { CONTACT } from "@/lib/content";
 import { LegalPage, type LegalBlock } from "@/components/legal-page";
 
 export const metadata: Metadata = {
-  title: "Mentions légales — Charline HAYS, Avocate",
+  title: "Mentions légales",
+  alternates: { canonical: "/mentions-legales" },
   robots: { index: false },
 };
 
@@ -32,7 +33,9 @@ const BLOCKS: LegalBlock[] = [
   },
   {
     heading: "Hébergement",
-    paragraphs: ["[À compléter : nom, raison sociale et adresse de l'hébergeur.]"],
+    paragraphs: [
+      "[À compléter : nom, raison sociale et adresse de l'hébergeur.]",
+    ],
   },
   {
     heading: "Propriété intellectuelle",

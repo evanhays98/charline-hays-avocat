@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import {
   CONSULTATION_FORMATS,
@@ -70,6 +70,9 @@ const validate = (
   email: EMAIL_PATTERN.test(fields.email.trim()),
 });
 
+const isSubjectId = (value: string | null): value is SubjectId =>
+  SUBJECTS.some(({ id }) => id === value);
+
 const labelOf = <T extends { label: string }>(
   items: T[],
   match: (item: T) => boolean,
@@ -85,6 +88,11 @@ export const RdvForm = () => {
   const [touched, setTouched] = useState<RequiredName[]>([]);
   const [submit, setSubmit] = useState<SubmitState>({ status: "idle" });
   const honeypot = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("objet");
+    if (isSubjectId(requested)) selectSubject(requested);
+  }, []);
   const started = useRef(false);
 
   const validity = validate(subject, fields);

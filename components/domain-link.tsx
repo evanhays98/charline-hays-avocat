@@ -2,7 +2,6 @@
 
 import { ArrowRight } from "lucide-react";
 import type { Domain } from "@/lib/content";
-import { selectSubject } from "@/lib/subject-store";
 import { trackEvent } from "@/lib/track";
 
 interface DomainLinkProps {
@@ -11,15 +10,12 @@ interface DomainLinkProps {
 }
 
 export const DomainLink = ({
-  domain: { title, description, situation },
+  domain: { title, description, situation, slug },
   index,
 }: DomainLinkProps) => (
   <a
-    href="#contact"
-    onClick={() => {
-      selectSubject(situation);
-      trackEvent("domaine_clic", { situation });
-    }}
+    href={`/domaines/${slug}`}
+    onClick={() => trackEvent("domaine_clic", { situation })}
     className="group grid grid-cols-[2.75rem_1fr_auto] items-center gap-3 border-b border-line py-5 transition-[padding,background-color] duration-300 hover:bg-linear-to-r hover:from-gold/7 hover:to-transparent hover:pl-2.5"
   >
     <span
@@ -36,7 +32,7 @@ export const DomainLink = ({
       </span>
     </span>
     <span className="flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-[0.14em] text-navy opacity-35 transition-[opacity,transform] duration-300 group-hover:translate-x-1 group-hover:opacity-100">
-      <span className="hidden md:inline">Rendez-vous</span>
+      <span className="hidden md:inline">En savoir plus</span>
       <ArrowRight className="size-4.5" aria-hidden="true" />
     </span>
   </a>

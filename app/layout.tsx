@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mulish, Playfair_Display } from "next/font/google";
-import { SITE_URL } from "@/lib/content";
+import { SEO, SITE_URL } from "@/lib/content";
+import { SHARE_IMAGES } from "@/lib/share-image";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { PostHogInit } from "@/components/analytics/posthog-init";
 import "./globals.css";
@@ -17,19 +18,34 @@ const mulish = Mulish({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Charline HAYS — Avocate en droit de la famille à Paris",
-  description:
-    "Charline HAYS, avocate au Barreau de Paris, intervient exclusivement en droit de la famille : divorce, autorité parentale, filiation, enlèvements internationaux d'enfants. Consultations sur rendez-vous.",
+  title: {
+    default: SEO.homeTitle,
+    template: "%s · Charline HAYS, avocate",
+  },
+  description: SEO.homeDescription,
+  applicationName: SEO.siteName,
+  authors: [{ name: "Charline Hays", url: `${SITE_URL}/a-propos` }],
+  creator: "Charline Hays",
   alternates: { canonical: "/" },
+  formatDetection: { telephone: true, email: true, address: true },
   openGraph: {
-    title: "Charline HAYS — Avocate en droit de la famille à Paris",
+    title: SEO.homeTitle,
     description:
       "Divorce, enfants, patrimoine : un accompagnement humain et rigoureux, à chaque étape de votre vie familiale.",
-    url: SITE_URL,
-    siteName: "Charline HAYS — Avocate",
+    url: "/",
+    siteName: SEO.siteName,
     locale: "fr_FR",
     type: "website",
+    images: SHARE_IMAGES,
   },
+  twitter: {
+    card: "summary_large_image",
+    title: SEO.homeTitle,
+    description:
+      "Divorce, enfants, patrimoine : un accompagnement humain et rigoureux, à chaque étape de votre vie familiale.",
+    images: ["/og-image.jpg"],
+  },
+  robots: { index: true, follow: true },
 };
 
 const RootLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => (

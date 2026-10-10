@@ -7,10 +7,19 @@ import { TrackedLink } from "@/components/analytics/tracked-link";
 
 const WATCHED_IDS = ["haut", "contact"];
 
-export const MobileActionBar = () => {
-  const [visibleIds, setVisibleIds] = useState<string[]>(["haut"]);
+interface MobileActionBarProps {
+  alwaysVisible?: boolean;
+}
+
+export const MobileActionBar = ({
+  alwaysVisible = false,
+}: MobileActionBarProps) => {
+  const [visibleIds, setVisibleIds] = useState<string[]>(
+    alwaysVisible ? [] : ["haut"],
+  );
 
   useEffect(() => {
+    if (alwaysVisible) return;
     const observer = new IntersectionObserver((entries) =>
       setVisibleIds((current) =>
         entries.reduce(
@@ -26,7 +35,7 @@ export const MobileActionBar = () => {
       .filter((element) => element !== null)
       .forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, []);
+  }, [alwaysVisible]);
 
   const shown = visibleIds.length === 0;
 
@@ -47,7 +56,7 @@ export const MobileActionBar = () => {
         Appeler
       </TrackedLink>
       <TrackedLink
-        href="#contact"
+        href="/#contact"
         event="rdv_cta_clic"
         properties={{ emplacement: "barre_mobile" }}
         className="flex min-h-12.5 items-center justify-center gap-2 border border-navy text-xs font-bold uppercase tracking-[0.14em] text-navy"

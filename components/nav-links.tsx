@@ -11,7 +11,7 @@ export const NavLinks = () => {
       (entries) =>
         entries
           .filter(({ isIntersecting }) => isIntersecting)
-          .forEach(({ target }) => setActiveHref(`#${target.id}`)),
+          .forEach(({ target }) => setActiveHref(`/#${target.id}`)),
       { rootMargin: "-45% 0px -50% 0px" },
     );
     document

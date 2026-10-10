@@ -1,4 +1,5 @@
-import { CONTACT, SITE_URL } from "@/lib/content";
+import { homeJsonLd } from "@/lib/structured-data";
+import { JsonLd } from "@/components/json-ld";
 import { NavBar } from "@/components/nav-bar";
 import { Hero } from "@/components/hero";
 import { FactsBar } from "@/components/facts-bar";
@@ -11,36 +12,9 @@ import { ContactSection } from "@/components/contact-section";
 import { SiteFooter } from "@/components/site-footer";
 import { MobileActionBar } from "@/components/mobile-action-bar";
 
-const attorneyJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Attorney",
-  name: "Charline HAYS",
-  url: SITE_URL,
-  image: `${SITE_URL}/portrait.jpg`,
-  telephone: "+33615570055",
-  email: CONTACT.email,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "156 avenue Victor Hugo",
-    postalCode: "75116",
-    addressLocality: "Paris",
-    addressCountry: "FR",
-  },
-  areaServed: "Île-de-France",
-  knowsAbout: [
-    "Droit de la famille",
-    "Divorce",
-    "Filiation",
-    "Enlèvements internationaux d'enfants",
-  ],
-};
-
 const HomePage = () => (
   <>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(attorneyJsonLd) }}
-    />
+    <JsonLd data={homeJsonLd()} />
     <NavBar />
     <Hero />
     <FactsBar />
