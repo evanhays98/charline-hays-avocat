@@ -17,7 +17,8 @@ import {
 } from "@/lib/dates";
 import { useQuery } from "@/lib/use-query";
 import { useTodayIso } from "@/lib/use-today";
-import { TimeSelect } from "@/components/admin/time-select";
+import { Clock } from "lucide-react";
+import { TimePicker } from "@/components/admin/time-picker";
 
 const WEEKS_AHEAD = 8;
 
@@ -66,6 +67,7 @@ const WeekPlanner = ({
   );
   const [pickedDay, setPickedDay] = useState<string | null>(null);
   const [customTime, setCustomTime] = useState<string | null>(null);
+  const [customOpen, setCustomOpen] = useState(false);
   const days = weekOf(fromIsoDate(todayIso), weekIndex);
   const rangeStart = toIsoDate(days[0]);
   const rangeEnd = toIsoDate(days[6]);
@@ -102,6 +104,7 @@ const WeekPlanner = ({
   const chooseDay = (key: string) => {
     setPickedDay(key);
     setCustomTime(null);
+    setCustomOpen(false);
   };
 
   const chooseCustomTime = (time: string) => {
@@ -181,16 +184,17 @@ const WeekPlanner = ({
       <div className="mt-3 min-h-11">
         {query.loading ? (
           <div className="h-11 animate-pulse bg-navy/5" />
-        ) : daySlots.length === 0 ? (
-          <p className="py-2.5 text-sm text-ink-soft">
-            Aucun créneau libre ce jour
-          </p>
         ) : (
           <div
             role="group"
             aria-label="Heure"
             className="grid grid-cols-4 gap-1.5 sm:grid-cols-6"
           >
+            {daySlots.length === 0 ? (
+              <p className="col-span-3 flex min-h-11 items-center text-sm text-ink-soft sm:col-span-5">
+                Aucun créneau libre
+              </p>
+            ) : null}
             {daySlots.map((slot) => {
               const selected = value === slot && customTime === null;
               const preferred = isPreferred(slot);
@@ -202,6 +206,7 @@ const WeekPlanner = ({
                   onClick={() => {
                     onChange(slot);
                     setCustomTime(null);
+                    setCustomOpen(false);
                   }}
                   className={`min-h-11 cursor-pointer border text-sm font-semibold tabular-nums transition-colors ${
                     selected
@@ -215,18 +220,29 @@ const WeekPlanner = ({
                 </button>
               );
             })}
+            {!pastDay ? (
+              <button
+                type="button"
+                aria-expanded={customOpen}
+                aria-pressed={customTime !== null}
+                onClick={() => setCustomOpen(!customOpen)}
+                className={`flex min-h-11 cursor-pointer items-center justify-center gap-1.5 border text-sm font-semibold tabular-nums transition-colors ${
+                  customTime !== null
+                    ? "border-navy bg-navy text-paper"
+                    : "border-dashed border-navy/40 text-navy hover:border-navy"
+                }`}
+              >
+                <Clock className="size-3.5" aria-hidden="true" />
+                {customTime ?? "Autre"}
+              </button>
+            ) : null}
           </div>
         )}
       </div>
 
-      {!pastDay ? (
-        <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-ink-soft">
-          Autre heure
-          <TimeSelect
-            label="Autre heure"
-            value={customTime ?? "12:00"}
-            onChange={chooseCustomTime}
-          />
+      {!pastDay && customOpen ? (
+        <div className="mt-2">
+          <TimePicker value={customTime} onChange={chooseCustomTime} />
         </div>
       ) : null}
     </div>
