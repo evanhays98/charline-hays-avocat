@@ -172,10 +172,29 @@ const layout = (headerTitle: string, content: string) =>
 </body>
 </html>`;
 
-const clientRecipient = (booking: Booking) => ({
-  email: booking.email,
-  name: booking.full_name,
-});
+const clientRecipient = (booking: Booking) =>
+  booking.email ? { email: booking.email, name: booking.full_name } : null;
+
+const messageParagraphs = (message: string) =>
+  message
+    .trim()
+    .split(/\n\s*\n/)
+    .map((block) => paragraph(escapeHtml(block.trim()).replace(/\n/g, "<br>")))
+    .join("");
+
+const greeting = (booking: Booking) =>
+  paragraph(`Bonjour ${firstName(booking)},`);
+
+export const DEFAULT_MESSAGES = {
+  scheduled:
+    "Je vous confirme notre rendez-vous. Pensez à apporter les documents utiles à votre dossier.",
+  rescheduled:
+    "Je vous confirme le nouvel horaire de notre rendez-vous. Pensez à apporter les documents utiles à votre dossier.",
+  declined:
+    "Je ne suis malheureusement pas en mesure de donner suite à votre demande.\n\nJe reste joignable pour toute question.",
+  cancelled:
+    "Je dois malheureusement annuler notre rendez-vous. Je reviens vers vous pour en convenir d'un autre.",
+};
 
 const officeReplyTo = { email: CONFIG.notifyEmail, name: "Charline HAYS" };
 
@@ -184,29 +203,38 @@ const callOffice: Button = {
   label: `Appeler le ${CONFIG.officePhone}`,
 };
 
-export const requestReceivedEmail = (booking: Booking): EmailMessage => ({
-  to: clientRecipient(booking),
-  replyTo: officeReplyTo,
-  subject: "Votre demande de rendez-vous est bien reçue",
-  html: layout(
-    "Charline HAYS",
-    heading("Demande bien reçue") +
-      paragraph(
-        `Bonjour ${
-          firstName(booking)
-        }, je reviens vers vous très rapidement pour convenir d'un rendez-vous.`,
-      ) +
-      requestCard(booking) +
-      paragraph(
-        "Une précision à ajouter ? Répondez simplement à cet email.",
-      ) +
-      buttons([callOffice]),
-  ),
-});
+const withRecipient = (
+  booking: Booking,
+  build: (to: { email: string; name: string }) => EmailMessage,
+) => {
+  const to = clientRecipient(booking);
+  return to ? build(to) : null;
+};
+
+export const requestReceivedEmail = (booking: Booking) =>
+  withRecipient(booking, (to) => ({
+    to,
+    replyTo: officeReplyTo,
+    subject: "Votre demande de rendez-vous est bien reçue",
+    html: layout(
+      "Charline HAYS",
+      heading("Demande bien reçue") +
+        paragraph(
+          `Bonjour ${
+            firstName(booking)
+          }, je reviens vers vous très rapidement pour convenir d'un rendez-vous.`,
+        ) +
+        requestCard(booking) +
+        paragraph(
+          "Une précision à ajouter ? Répondez simplement à cet email.",
+        ) +
+        buttons([callOffice]),
+    ),
+  }));
 
 export const newRequestEmail = (booking: Booking): EmailMessage => ({
   to: { email: CONFIG.notifyEmail, name: "Charline HAYS" },
-  replyTo: clientRecipient(booking),
+  replyTo: clientRecipient(booking) ?? undefined,
   subject: `Nouvelle demande — ${
     SUBJECT_LABELS[booking.subject] ?? booking.subject
   } — ${booking.full_name}`,
@@ -223,9 +251,11 @@ export const newRequestEmail = (booking: Booking): EmailMessage => ({
                 phoneHref(booking.phone)
               }" style="color:${COLORS.navy}">${escapeHtml(booking.phone)}</a>`
               : null,
-            `<a href="mailto:${
-              escapeHtml(booking.email)
-            }" style="color:${COLORS.navy}">${escapeHtml(booking.email)}</a>`,
+            booking.email
+              ? `<a href="mailto:${
+                escapeHtml(booking.email)
+              }" style="color:${COLORS.navy}">${escapeHtml(booking.email)}</a>`
+              : null,
           ].filter(Boolean).join("<br>")
         }</p>`,
       ]) +
@@ -246,65 +276,67 @@ export const newRequestEmail = (booking: Booking): EmailMessage => ({
 export const scheduledEmail = (
   booking: ScheduledBooking,
   rescheduled: boolean,
-): EmailMessage => ({
-  to: clientRecipient(booking),
-  replyTo: officeReplyTo,
-  subject: rescheduled
-    ? `Votre rendez-vous est déplacé au ${
-      formatDateTime(booking.starts_at).toLowerCase()
-    }`
-    : `Rendez-vous confirmé — ${
-      formatDateTime(booking.starts_at).toLowerCase()
-    }`,
-  attachments: [buildIcsAttachment(booking)],
-  html: layout(
-    "Charline HAYS",
-    heading(rescheduled ? "Rendez-vous déplacé" : "Rendez-vous confirmé") +
-      dateCard(booking, "green") +
-      paragraph(
-        `Bonjour ${firstName(booking)}, je vous confirme ${
-          rescheduled ? "le nouvel horaire de " : ""
-        }notre rendez-vous. Pensez à apporter les documents utiles à votre dossier.`,
-      ) +
-      buttons([
-        { href: googleCalendarUrl(booking), label: "Ajouter à mon agenda" },
-        ...(booking.format === "cabinet"
-          ? [{ href: MAPS_URL, label: "Itinéraire", outline: true }]
-          : []),
-      ]),
-  ),
-});
+  message?: string,
+) =>
+  withRecipient(booking, (to) => ({
+    to,
+    replyTo: officeReplyTo,
+    subject: rescheduled
+      ? `Votre rendez-vous est déplacé au ${
+        formatDateTime(booking.starts_at).toLowerCase()
+      }`
+      : `Rendez-vous confirmé — ${
+        formatDateTime(booking.starts_at).toLowerCase()
+      }`,
+    attachments: [buildIcsAttachment(booking)],
+    html: layout(
+      "Charline HAYS",
+      heading(rescheduled ? "Rendez-vous déplacé" : "Rendez-vous confirmé") +
+        dateCard(booking, "green") +
+        greeting(booking) +
+        messageParagraphs(
+          message ??
+            (rescheduled
+              ? DEFAULT_MESSAGES.rescheduled
+              : DEFAULT_MESSAGES.scheduled),
+        ) +
+        buttons([
+          { href: googleCalendarUrl(booking), label: "Ajouter à mon agenda" },
+          ...(booking.format === "cabinet"
+            ? [{ href: MAPS_URL, label: "Itinéraire", outline: true }]
+            : []),
+        ]),
+    ),
+  }));
 
-export const declinedEmail = (booking: Booking): EmailMessage => ({
-  to: clientRecipient(booking),
-  replyTo: officeReplyTo,
-  subject: "Votre demande de rendez-vous",
-  html: layout(
-    "Charline HAYS",
-    heading("Votre demande") +
-      paragraph(
-        `Bonjour ${
-          firstName(booking)
-        }, je ne suis malheureusement pas en mesure de donner suite à votre demande.`,
-      ) +
-      paragraph("Je reste joignable pour toute question.") +
-      buttons([{ ...callOffice, outline: true }]),
-  ),
-});
+export const declinedEmail = (booking: Booking, message?: string) =>
+  withRecipient(booking, (to) => ({
+    to,
+    replyTo: officeReplyTo,
+    subject: "Votre demande de rendez-vous",
+    html: layout(
+      "Charline HAYS",
+      heading("Votre demande") +
+        greeting(booking) +
+        messageParagraphs(message ?? DEFAULT_MESSAGES.declined) +
+        buttons([{ ...callOffice, outline: true }]),
+    ),
+  }));
 
-export const cancelledEmail = (booking: ScheduledBooking): EmailMessage => ({
-  to: clientRecipient(booking),
-  replyTo: officeReplyTo,
-  subject: "Votre rendez-vous est annulé",
-  html: layout(
-    "Charline HAYS",
-    heading("Rendez-vous annulé") +
-      dateCard(booking, "grey") +
-      paragraph(
-        `Bonjour ${
-          firstName(booking)
-        }, je dois malheureusement annuler notre rendez-vous. Je reviens vers vous pour en convenir d'un autre.`,
-      ) +
-      buttons([callOffice]),
-  ),
-});
+export const cancelledEmail = (
+  booking: ScheduledBooking,
+  message?: string,
+) =>
+  withRecipient(booking, (to) => ({
+    to,
+    replyTo: officeReplyTo,
+    subject: "Votre rendez-vous est annulé",
+    html: layout(
+      "Charline HAYS",
+      heading("Rendez-vous annulé") +
+        dateCard(booking, "grey") +
+        greeting(booking) +
+        messageParagraphs(message ?? DEFAULT_MESSAGES.cancelled) +
+        buttons([callOffice]),
+    ),
+  }));

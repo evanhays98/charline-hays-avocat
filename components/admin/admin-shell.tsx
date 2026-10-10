@@ -3,17 +3,18 @@
 import { useCallback, useState } from "react";
 import {
   CalendarDays,
+  CalendarPlus,
   Clock,
   Inbox,
   LogOut,
   type LucideIcon,
 } from "lucide-react";
 import {
-  applyBookingAction,
+  runAdminCommand,
   fetchUpcomingBookings,
   type AdminAction,
   type AdminCommand,
-  type AdminBooking,
+  type CommandOptions,
 } from "@/lib/admin-api";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@/lib/use-query";
@@ -27,6 +28,11 @@ import { AgendaPanel } from "@/components/admin/agenda-panel";
 import { NotificationsToggle } from "@/components/admin/notifications-toggle";
 import { InstallAppButton } from "@/components/admin/install-app-button";
 import { AvailabilityPanel } from "@/components/admin/availability-panel";
+import {
+  AppointmentSheet,
+  type SheetMode,
+} from "@/components/admin/appointment-sheet";
+import { AdminButton } from "@/components/admin/admin-button";
 
 type AdminTab = "demandes" | "agenda" | "disponibilites";
 
@@ -38,6 +44,7 @@ const TABS: { id: AdminTab; label: string; icon: LucideIcon }[] = [
 
 const ACTION_DONE: Record<AdminAction, string> = {
   schedule: "Rendez-vous fixé",
+  create: "Rendez-vous créé",
   decline: "Demande refusée",
   cancel: "Rendez-vous annulé",
 };
@@ -56,6 +63,7 @@ export const AdminShell = ({ email }: AdminShellProps) => {
   const [version, setVersion] = useState(0);
   const [busy, setBusy] = useState<BusyAction | null>(null);
   const [toast, setToast] = useState<Toast | null>(null);
+  const [sheet, setSheet] = useState<SheetMode | null>(null);
   const upcoming = useQuery(`upcoming:${version}`, fetchUpcomingBookings);
   const bookings = upcoming.data ?? upcoming.previous;
   const pendingCount =
@@ -68,13 +76,15 @@ export const AdminShell = ({ email }: AdminShellProps) => {
   );
   const dismiss = useCallback(() => setToast(null), []);
 
+  const closeSheet = useCallback(() => setSheet(null), []);
+
   const handleAction = async (
-    booking: AdminBooking,
     command: AdminCommand,
-    notifyClient: boolean,
+    options: CommandOptions,
   ) => {
-    setBusy({ id: booking.id, action: command.action });
-    const result = await applyBookingAction(booking.id, command, notifyClient);
+    const id = command.action === "create" ? "new" : command.bookingId;
+    setBusy({ id, action: command.action });
+    const result = await runAdminCommand(command, options);
     setBusy(null);
     if (!result.ok) {
       notify(
@@ -84,13 +94,12 @@ export const AdminShell = ({ email }: AdminShellProps) => {
       setVersion(version + 1);
       return;
     }
-    const emailPart = result.emailSent
-      ? `email envoyé à ${booking.fullName}`
-      : "sans email";
+    const emailPart = result.emailSent ? "email envoyé" : "sans email";
     notify(
-      result.emailSent || !notifyClient ? "success" : "warning",
-      `${ACTION_DONE[command.action]} · ${notifyClient && !result.emailSent ? "email non envoyé" : emailPart}`,
+      result.emailSent || !options.notify ? "success" : "warning",
+      `${ACTION_DONE[command.action]} · ${options.notify && !result.emailSent ? "email non envoyé" : emailPart}`,
     );
+    setSheet(null);
     setVersion(version + 1);
   };
 
@@ -103,10 +112,10 @@ export const AdminShell = ({ email }: AdminShellProps) => {
               className="size-8 text-paper"
               ringClassName="stroke-gold-soft"
             />
-            <span className="font-serif text-lg">Rendez-vous</span>
+            <span className="font-serif text-lg">Hays</span>
           </div>
           <div className="flex items-center gap-1">
-            <InstallAppButton />
+            <InstallAppButton compact />
             <span className="ml-2 hidden text-sm text-mist md:inline">
               {email}
             </span>
@@ -159,7 +168,18 @@ export const AdminShell = ({ email }: AdminShellProps) => {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-10">
+      <main className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">
+        {tab !== "disponibilites" ? (
+          <div className="mb-6 flex justify-end">
+            <AdminButton
+              onClick={() => setSheet({ kind: "create" })}
+              icon={<CalendarPlus className="size-4" aria-hidden="true" />}
+              className="w-full sm:w-auto"
+            >
+              Nouveau rendez-vous
+            </AdminButton>
+          </div>
+        ) : null}
         {tab === "demandes" ? (
           <RequestsPanel
             bookings={bookings}
@@ -167,10 +187,16 @@ export const AdminShell = ({ email }: AdminShellProps) => {
             onRetry={upcoming.reload}
             busy={busy}
             onAction={handleAction}
+            onPlan={(booking) => setSheet({ kind: "plan", booking })}
           />
         ) : null}
         {tab === "agenda" ? (
-          <AgendaPanel version={version} busy={busy} onAction={handleAction} />
+          <AgendaPanel
+            version={version}
+            busy={busy}
+            onAction={handleAction}
+            onPlan={(booking) => setSheet({ kind: "plan", booking })}
+          />
         ) : null}
         {tab === "disponibilites" ? (
           <AvailabilityPanel notify={notify} />
@@ -178,6 +204,17 @@ export const AdminShell = ({ email }: AdminShellProps) => {
       </main>
 
       <AdminToast toast={toast} onDismiss={dismiss} />
+      {sheet ? (
+        <AppointmentSheet
+          mode={sheet}
+          busy={
+            busy !== null &&
+            (busy.action === "create" || busy.action === "schedule")
+          }
+          onClose={closeSheet}
+          onSubmit={handleAction}
+        />
+      ) : null}
     </div>
   );
 };

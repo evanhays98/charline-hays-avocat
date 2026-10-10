@@ -6,6 +6,12 @@ cd "$(dirname "$0")/.."
 supabase() { npx --yes supabase@2.120.0 "$@"; }
 
 supabase start -x vector,logflare,imgproxy,supavisor,realtime
+local_secret=$(supabase status -o env 2>/dev/null | sed -n 's/^SECRET_KEY="\{0,1\}\([^"]*\)"\{0,1\}$/\1/p')
+curl -s -o /dev/null -X POST "http://127.0.0.1:54321/storage/v1/object/public-assets/logo-email.png" \
+  -H "apikey: ${local_secret}" -H "Authorization: Bearer ${local_secret}" \
+  -H "Content-Type: image/png" -H "x-upsert: true" \
+  --data-binary @supabase/assets/logo-email.png || true
+
 supabase functions serve > supabase-functions.log 2>&1 &
 functions_pid=$!
 trap 'kill "$functions_pid" 2>/dev/null || true' EXIT INT TERM

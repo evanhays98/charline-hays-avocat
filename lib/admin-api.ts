@@ -9,10 +9,44 @@ type BookingRow = Tables["bookings"]["Row"];
 
 export type BookingStatus = Database["public"]["Enums"]["booking_status"];
 
+export interface NewClient {
+  fullName: string;
+  email: string;
+  phone: string;
+  subject: string;
+}
+
 export type AdminCommand =
-  | { action: "schedule"; startsAt: string }
-  | { action: "decline" }
-  | { action: "cancel" };
+  | {
+      action: "schedule";
+      bookingId: string;
+      startsAt: string;
+      format: ConsultationFormatValue;
+    }
+  | {
+      action: "create";
+      client: NewClient;
+      startsAt: string;
+      format: ConsultationFormatValue;
+    }
+  | { action: "decline"; bookingId: string }
+  | { action: "cancel"; bookingId: string };
+
+export interface CommandOptions {
+  notify: boolean;
+  message: string;
+}
+
+export interface EmailPreview {
+  to: string;
+  subject: string;
+  html: string;
+}
+
+export interface CommandPreview {
+  defaultMessage: string;
+  email: EmailPreview | null;
+}
 
 export type AdminAction = AdminCommand["action"];
 
@@ -25,7 +59,7 @@ export interface AdminBooking {
   subject: string;
   format: ConsultationFormatValue;
   fullName: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   message: string | null;
   availability: string[];
@@ -147,22 +181,32 @@ export const fetchFreeSlots = async (
   }));
 };
 
-export const applyBookingAction = async (
-  bookingId: string,
+const failure = async (error: unknown): Promise<ActionResult> => {
+  const code = await readFunctionError(error);
+  return { ok: false, error: typeof code === "string" ? code : "server_error" };
+};
+
+export const runAdminCommand = async (
   command: AdminCommand,
-  notify: boolean,
+  { notify, message }: CommandOptions,
 ): Promise<ActionResult> => {
   const { data, error } = await client().functions.invoke<{
     emailSent: boolean;
-  }>("admin-booking", { body: { bookingId, notify, ...command } });
-  if (error) {
-    const code = await readFunctionError(error);
-    return {
-      ok: false,
-      error: typeof code === "string" ? code : "server_error",
-    };
-  }
+  }>("admin-booking", { body: { ...command, notify, message } });
+  if (error) return failure(error);
   return { ok: true, emailSent: data?.emailSent ?? false };
+};
+
+export const previewAdminCommand = async (
+  command: AdminCommand,
+  message: string,
+): Promise<CommandPreview> => {
+  const { data, error } = await client().functions.invoke<CommandPreview>(
+    "admin-booking",
+    { body: { ...command, message, preview: true } },
+  );
+  if (error || !data) throw error ?? new Error("preview_failed");
+  return data;
 };
 
 export const fetchWeeklyHours = async (): Promise<WeeklyHour[]> => {

@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { AdminApp } from "@/components/admin/admin-app";
 
 export const metadata: Metadata = {
-  title: "Rendez-vous — Charline HAYS",
+  title: "Hays",
   robots: { index: false, follow: false },
   manifest: "/admin.webmanifest",
   icons: { apple: "/admin-apple-icon.png" },
   appleWebApp: {
     capable: true,
-    title: "Rendez-vous",
+    title: "Hays",
     statusBarStyle: "default",
   },
 };

@@ -54,7 +54,7 @@ export type Database = {
         Row: {
           availability: string[];
           created_at: string;
-          email: string;
+          email: string | null;
           ends_at: string | null;
           format: Database["public"]["Enums"]["consultation_format"];
           full_name: string;
@@ -69,7 +69,7 @@ export type Database = {
         Insert: {
           availability?: string[];
           created_at?: string;
-          email: string;
+          email?: string | null;
           ends_at?: string | null;
           format?: Database["public"]["Enums"]["consultation_format"];
           full_name: string;
@@ -83,7 +83,7 @@ export type Database = {
         Update: {
           availability?: string[];
           created_at?: string;
-          email?: string;
+          email?: string | null;
           ends_at?: string | null;
           format?: Database["public"]["Enums"]["consultation_format"];
           full_name?: string;

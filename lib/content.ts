@@ -292,3 +292,25 @@ export const CONSULTATION_FORMATS: ConsultationFormat[] = [
   { value: "visio", label: "Visio" },
   { value: "telephone", label: "Téléphone" },
 ];
+
+export const APPOINTMENT_MESSAGES: Record<
+  "schedule" | "reschedule",
+  Record<ConsultationFormatValue, string>
+> = {
+  schedule: {
+    cabinet:
+      "Je vous confirme notre rendez-vous au cabinet. Pensez à apporter les documents utiles à votre dossier.",
+    visio:
+      "Je vous confirme notre rendez-vous en visio. Je vous enverrai le lien de connexion peu avant le rendez-vous.",
+    telephone:
+      "Je vous confirme notre rendez-vous téléphonique. Je vous appellerai au numéro que vous m'avez indiqué.",
+  },
+  reschedule: {
+    cabinet:
+      "Je vous confirme le nouvel horaire de notre rendez-vous au cabinet. Pensez à apporter les documents utiles à votre dossier.",
+    visio:
+      "Je vous confirme le nouvel horaire de notre rendez-vous en visio. Je vous enverrai le lien de connexion peu avant le rendez-vous.",
+    telephone:
+      "Je vous confirme le nouvel horaire de notre rendez-vous téléphonique. Je vous appellerai au numéro que vous m'avez indiqué.",
+  },
+};

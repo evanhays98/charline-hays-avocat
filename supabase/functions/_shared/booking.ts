@@ -11,7 +11,7 @@ export interface Booking {
   subject: string;
   format: ConsultationFormat;
   full_name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   message: string | null;
   availability: string[];

@@ -41,6 +41,7 @@ Secrets locaux des fonctions : `supabase/functions/.env` (ignoré par git), à c
 MAILPIT_URL=http://supabase_inbucket_charline-hays-site:8025
 SITE_URL=http://localhost:3000
 NOTIFY_EMAIL=charline@local.test
+LOGO_URL=http://127.0.0.1:54321/storage/v1/object/public/public-assets/logo-email.png
 VAPID_KEYS={...}            # clés VAPID de dev
 ```
 

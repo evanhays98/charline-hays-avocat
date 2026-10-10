@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { fetchFreeSlots, type AdminBooking } from "@/lib/admin-api";
+import { fetchFreeSlots } from "@/lib/admin-api";
 import {
   atLocalTime,
-  formatSlotLong,
   formatTime,
   formatWeekRange,
   fromIsoDate,
@@ -18,19 +17,17 @@ import {
 } from "@/lib/dates";
 import { useQuery } from "@/lib/use-query";
 import { useTodayIso } from "@/lib/use-today";
-import { AdminButton } from "@/components/admin/admin-button";
 import { TimeSelect } from "@/components/admin/time-select";
 
 const WEEKS_AHEAD = 8;
 
-interface ScheduleFormProps {
-  booking: AdminBooking;
-  busy: boolean;
-  onSubmit: (startsAt: string, notify: boolean) => void;
-  onClose: () => void;
+interface SlotChooserProps {
+  availability: string[];
+  value: string | null;
+  onChange: (startsAt: string) => void;
 }
 
-interface WeekPlannerProps extends ScheduleFormProps {
+interface WeekPlannerProps extends SlotChooserProps {
   todayIso: string;
 }
 
@@ -60,18 +57,15 @@ const navButtonClass =
 
 const WeekPlanner = ({
   todayIso,
-  booking,
-  busy,
-  onSubmit,
-  onClose,
+  availability,
+  value,
+  onChange,
 }: WeekPlannerProps) => {
   const [weekIndex, setWeekIndex] = useState(() =>
-    initialWeek(todayIso, booking.availability),
+    initialWeek(todayIso, availability),
   );
   const [pickedDay, setPickedDay] = useState<string | null>(null);
-  const [startsAt, setStartsAt] = useState<string | null>(null);
   const [customTime, setCustomTime] = useState<string | null>(null);
-  const [notify, setNotify] = useState(true);
   const days = weekOf(fromIsoDate(todayIso), weekIndex);
   const rangeStart = toIsoDate(days[0]);
   const rangeEnd = toIsoDate(days[6]);
@@ -84,7 +78,7 @@ const WeekPlanner = ({
     const key = instantDayKey(slot.startsAt);
     return { ...groups, [key]: [...(groups[key] ?? []), slot.startsAt] };
   }, {});
-  const preferredDays = booking.availability.map((key) => key.slice(0, 10));
+  const preferredDays = availability.map((key) => key.slice(0, 10));
   const visibleDays = days.filter(
     (day, index) => index < 5 || (slotsByDay[toIsoDate(day)]?.length ?? 0) > 0,
   );
@@ -97,7 +91,7 @@ const WeekPlanner = ({
   const activeDay = pickedDay ?? defaultDay;
   const daySlots = slotsByDay[activeDay] ?? [];
   const isPreferred = (iso: string) =>
-    booking.availability.includes(`${instantDayKey(iso)}|${periodOf(iso)}`);
+    availability.includes(`${instantDayKey(iso)}|${periodOf(iso)}`);
   const pastDay = activeDay < todayIso;
 
   const goToWeek = (index: number) => {
@@ -112,11 +106,11 @@ const WeekPlanner = ({
 
   const chooseCustomTime = (time: string) => {
     setCustomTime(time);
-    setStartsAt(atLocalTime(fromIsoDate(activeDay), time).toISOString());
+    onChange(atLocalTime(fromIsoDate(activeDay), time).toISOString());
   };
 
   return (
-    <div className="col-span-full border-t border-line bg-white px-4 py-5 md:border md:px-5">
+    <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="font-serif text-lg text-navy">{formatWeekRange(days)}</p>
         <div className="flex gap-1.5">
@@ -198,7 +192,7 @@ const WeekPlanner = ({
             className="grid grid-cols-4 gap-1.5 sm:grid-cols-6"
           >
             {daySlots.map((slot) => {
-              const selected = startsAt === slot && customTime === null;
+              const selected = value === slot && customTime === null;
               const preferred = isPreferred(slot);
               return (
                 <button
@@ -206,7 +200,7 @@ const WeekPlanner = ({
                   type="button"
                   aria-pressed={selected}
                   onClick={() => {
-                    setStartsAt(slot);
+                    onChange(slot);
                     setCustomTime(null);
                   }}
                   className={`min-h-11 cursor-pointer border text-sm font-semibold tabular-nums transition-colors ${
@@ -235,40 +229,11 @@ const WeekPlanner = ({
           />
         </div>
       ) : null}
-
-      <label className="mt-4 flex min-h-11 cursor-pointer items-center gap-3 text-[15px] text-ink">
-        <input
-          type="checkbox"
-          checked={notify}
-          onChange={(event) => setNotify(event.target.checked)}
-          className="size-4.5 accent-navy"
-        />
-        Envoyer la confirmation par email à {booking.fullName}
-      </label>
-
-      <div className="mt-4 flex flex-col gap-2 border-t border-line pt-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="font-serif text-lg text-navy">
-          {startsAt ? formatSlotLong(startsAt) : "—"}
-        </p>
-        <div className="flex gap-2">
-          <AdminButton variant="ghost" onClick={onClose} className="flex-1">
-            Fermer
-          </AdminButton>
-          <AdminButton
-            busy={busy}
-            disabled={!startsAt}
-            onClick={() => startsAt && onSubmit(startsAt, notify)}
-            className="flex-1"
-          >
-            Confirmer
-          </AdminButton>
-        </div>
-      </div>
     </div>
   );
 };
 
-export const ScheduleForm = (props: ScheduleFormProps) => {
+export const SlotChooser = (props: SlotChooserProps) => {
   const todayIso = useTodayIso();
   if (!todayIso) return null;
   return <WeekPlanner todayIso={todayIso} {...props} />;

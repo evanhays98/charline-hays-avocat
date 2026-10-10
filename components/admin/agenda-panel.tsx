@@ -8,6 +8,7 @@ import {
   isScheduledBooking,
   type AdminBooking,
   type AdminCommand,
+  type CommandOptions,
 } from "@/lib/admin-api";
 import {
   addDays,
@@ -37,11 +38,8 @@ const HOURS = Array.from(
 interface AgendaPanelProps {
   version: number;
   busy: BusyAction | null;
-  onAction: (
-    booking: AdminBooking,
-    command: AdminCommand,
-    notify: boolean,
-  ) => void;
+  onAction: (command: AdminCommand, options: CommandOptions) => void;
+  onPlan: (booking: AdminBooking) => void;
 }
 
 interface WeekAgendaProps extends AgendaPanelProps {
@@ -67,7 +65,13 @@ const sameDay = (day: Date, iso: string) =>
 const navButtonClass =
   "grid size-10 cursor-pointer place-items-center border border-line bg-paper text-navy transition-colors hover:border-navy";
 
-const WeekAgenda = ({ todayIso, version, busy, onAction }: WeekAgendaProps) => {
+const WeekAgenda = ({
+  todayIso,
+  version,
+  busy,
+  onAction,
+  onPlan,
+}: WeekAgendaProps) => {
   const [weekIndex, setWeekIndex] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const today = fromIsoDate(todayIso);
@@ -324,6 +328,7 @@ const WeekAgenda = ({ todayIso, version, busy, onAction }: WeekAgendaProps) => {
             booking={selected}
             busyAction={busy?.id === selected.id ? busy.action : null}
             onAction={onAction}
+            onPlan={onPlan}
           />
         </div>
       ) : null}

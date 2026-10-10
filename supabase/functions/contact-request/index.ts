@@ -115,8 +115,9 @@ Deno.serve(async (request) => {
     return json({ error: "server_error" }, 500);
   }
 
+  const receipt = requestReceivedEmail(booking);
   await Promise.all([
-    sendEmail(requestReceivedEmail(booking)),
+    receipt ? sendEmail(receipt) : Promise.resolve(false),
     sendEmail(newRequestEmail(booking)),
     notifyAdmins({
       title: `Nouvelle demande · ${booking.full_name}`,
