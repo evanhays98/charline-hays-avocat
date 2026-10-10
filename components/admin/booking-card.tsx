@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   CalendarCheck,
   CalendarClock,
@@ -17,8 +16,6 @@ import {
   isScheduledBooking,
   type AdminAction,
   type AdminBooking,
-  type AdminCommand,
-  type CommandOptions,
 } from "@/lib/admin-api";
 import {
   formatAvailability,
@@ -30,6 +27,7 @@ import {
 import { formatLabel, subjectLabel } from "@/lib/booking-labels";
 import { AdminButton } from "@/components/admin/admin-button";
 import { StatusBadge } from "@/components/admin/status-badge";
+import type { Resolution } from "@/components/admin/resolution-sheet";
 
 const FORMAT_ICONS: Record<ConsultationFormatValue, LucideIcon> = {
   cabinet: MapPin,
@@ -41,10 +39,8 @@ interface BookingCardProps {
   booking: AdminBooking;
   busyAction: AdminAction | null;
   onPlan: (booking: AdminBooking) => void;
-  onAction: (command: AdminCommand, options: CommandOptions) => void;
+  onResolve: (booking: AdminBooking, resolution: Resolution) => void;
 }
-
-const QUICK_OPTIONS: CommandOptions = { notify: true, message: "" };
 
 const DateBlock = ({ startsAt }: { startsAt: string }) => {
   const { weekday, day, month } = formatDayParts(startsAt);
@@ -78,9 +74,8 @@ export const BookingCard = ({
   booking,
   busyAction,
   onPlan,
-  onAction,
+  onResolve,
 }: BookingCardProps) => {
-  const [confirmingCancel, setConfirmingCancel] = useState(false);
   const FormatIcon = FORMAT_ICONS[booking.format];
   const busy = busyAction !== null;
   const scheduled = isScheduledBooking(booking);
@@ -179,66 +174,36 @@ export const BookingCard = ({
       </div>
 
       <div className="grid grid-cols-2 gap-2 md:grid-cols-1">
-        {!confirmingCancel ? (
+        <AdminButton
+          variant={scheduled ? "secondary" : "primary"}
+          disabled={busy}
+          onClick={() => onPlan(booking)}
+          icon={<CalendarCheck className="size-4" aria-hidden="true" />}
+          className={scheduled ? "" : "col-span-2 md:col-span-1"}
+        >
+          {scheduled ? "Déplacer" : "Fixer le RDV"}
+        </AdminButton>
+        {scheduled ? (
           <AdminButton
-            variant={scheduled ? "secondary" : "primary"}
+            variant="ghost"
+            busy={busyAction === "cancel"}
             disabled={busy}
-            onClick={() => onPlan(booking)}
-            icon={<CalendarCheck className="size-4" aria-hidden="true" />}
-            className={scheduled ? "" : "col-span-2 md:col-span-1"}
+            onClick={() => onResolve(booking, "cancel")}
           >
-            {scheduled ? "Déplacer" : "Fixer le RDV"}
+            Annuler le RDV
           </AdminButton>
-        ) : null}
-        {!scheduled ? (
+        ) : (
           <AdminButton
             variant="danger"
             busy={busyAction === "decline"}
             disabled={busy}
-            onClick={() =>
-              onAction(
-                { action: "decline", bookingId: booking.id },
-                QUICK_OPTIONS,
-              )
-            }
+            onClick={() => onResolve(booking, "decline")}
             icon={<X className="size-4" aria-hidden="true" />}
             className="col-span-2 md:col-span-1"
           >
             Refuser
           </AdminButton>
-        ) : null}
-        {scheduled && !confirmingCancel ? (
-          <AdminButton
-            variant="ghost"
-            disabled={busy}
-            onClick={() => setConfirmingCancel(true)}
-          >
-            Annuler le RDV
-          </AdminButton>
-        ) : null}
-        {scheduled && confirmingCancel ? (
-          <>
-            <AdminButton
-              variant="danger"
-              busy={busyAction === "cancel"}
-              onClick={() =>
-                onAction(
-                  { action: "cancel", bookingId: booking.id },
-                  QUICK_OPTIONS,
-                )
-              }
-            >
-              Confirmer
-            </AdminButton>
-            <AdminButton
-              variant="ghost"
-              disabled={busy}
-              onClick={() => setConfirmingCancel(false)}
-            >
-              Garder
-            </AdminButton>
-          </>
-        ) : null}
+        )}
       </div>
     </article>
   );

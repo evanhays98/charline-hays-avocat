@@ -10,6 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import {
+  type AdminBooking,
   runAdminCommand,
   fetchUpcomingBookings,
   type AdminAction,
@@ -33,6 +34,10 @@ import {
   type SheetMode,
 } from "@/components/admin/appointment-sheet";
 import { AdminButton } from "@/components/admin/admin-button";
+import {
+  ResolutionSheet,
+  type Resolution,
+} from "@/components/admin/resolution-sheet";
 
 type AdminTab = "demandes" | "agenda" | "disponibilites";
 
@@ -64,6 +69,10 @@ export const AdminShell = ({ email }: AdminShellProps) => {
   const [busy, setBusy] = useState<BusyAction | null>(null);
   const [toast, setToast] = useState<Toast | null>(null);
   const [sheet, setSheet] = useState<SheetMode | null>(null);
+  const [resolving, setResolving] = useState<{
+    booking: AdminBooking;
+    resolution: Resolution;
+  } | null>(null);
   const upcoming = useQuery(`upcoming:${version}`, fetchUpcomingBookings);
   const bookings = upcoming.data ?? upcoming.previous;
   const pendingCount =
@@ -77,6 +86,9 @@ export const AdminShell = ({ email }: AdminShellProps) => {
   const dismiss = useCallback(() => setToast(null), []);
 
   const closeSheet = useCallback(() => setSheet(null), []);
+  const closeResolving = useCallback(() => setResolving(null), []);
+  const openResolving = (booking: AdminBooking, resolution: Resolution) =>
+    setResolving({ booking, resolution });
 
   const handleAction = async (
     command: AdminCommand,
@@ -100,6 +112,7 @@ export const AdminShell = ({ email }: AdminShellProps) => {
       `${ACTION_DONE[command.action]} · ${options.notify && !result.emailSent ? "email non envoyé" : emailPart}`,
     );
     setSheet(null);
+    setResolving(null);
     setVersion(version + 1);
   };
 
@@ -186,7 +199,7 @@ export const AdminShell = ({ email }: AdminShellProps) => {
             failed={upcoming.failed}
             onRetry={upcoming.reload}
             busy={busy}
-            onAction={handleAction}
+            onResolve={openResolving}
             onPlan={(booking) => setSheet({ kind: "plan", booking })}
           />
         ) : null}
@@ -194,7 +207,7 @@ export const AdminShell = ({ email }: AdminShellProps) => {
           <AgendaPanel
             version={version}
             busy={busy}
-            onAction={handleAction}
+            onResolve={openResolving}
             onPlan={(booking) => setSheet({ kind: "plan", booking })}
           />
         ) : null}
@@ -204,6 +217,15 @@ export const AdminShell = ({ email }: AdminShellProps) => {
       </main>
 
       <AdminToast toast={toast} onDismiss={dismiss} />
+      {resolving ? (
+        <ResolutionSheet
+          booking={resolving.booking}
+          resolution={resolving.resolution}
+          busy={busy?.id === resolving.booking.id}
+          onClose={closeResolving}
+          onSubmit={handleAction}
+        />
+      ) : null}
       {sheet ? (
         <AppointmentSheet
           mode={sheet}

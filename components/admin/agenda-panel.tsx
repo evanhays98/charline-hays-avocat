@@ -7,8 +7,6 @@ import {
   fetchTimeOffBetween,
   isScheduledBooking,
   type AdminBooking,
-  type AdminCommand,
-  type CommandOptions,
 } from "@/lib/admin-api";
 import {
   addDays,
@@ -23,6 +21,7 @@ import { subjectLabel } from "@/lib/booking-labels";
 import { useQuery } from "@/lib/use-query";
 import { useTodayIso } from "@/lib/use-today";
 import { BookingCard } from "@/components/admin/booking-card";
+import type { Resolution } from "@/components/admin/resolution-sheet";
 import { StatusBadge } from "@/components/admin/status-badge";
 import { AdminButton } from "@/components/admin/admin-button";
 import type { BusyAction } from "@/components/admin/requests-panel";
@@ -38,7 +37,7 @@ const HOURS = Array.from(
 interface AgendaPanelProps {
   version: number;
   busy: BusyAction | null;
-  onAction: (command: AdminCommand, options: CommandOptions) => void;
+  onResolve: (booking: AdminBooking, resolution: Resolution) => void;
   onPlan: (booking: AdminBooking) => void;
 }
 
@@ -69,7 +68,7 @@ const WeekAgenda = ({
   todayIso,
   version,
   busy,
-  onAction,
+  onResolve,
   onPlan,
 }: WeekAgendaProps) => {
   const [weekIndex, setWeekIndex] = useState(0);
@@ -327,7 +326,7 @@ const WeekAgenda = ({
           <BookingCard
             booking={selected}
             busyAction={busy?.id === selected.id ? busy.action : null}
-            onAction={onAction}
+            onResolve={onResolve}
             onPlan={onPlan}
           />
         </div>

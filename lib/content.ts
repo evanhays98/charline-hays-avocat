@@ -314,3 +314,10 @@ export const APPOINTMENT_MESSAGES: Record<
       "Je vous confirme le nouvel horaire de notre rendez-vous téléphonique. Je vous appellerai au numéro que vous m'avez indiqué.",
   },
 };
+
+export const RESOLUTION_MESSAGES = {
+  decline:
+    "Je ne suis malheureusement pas en mesure de donner suite à votre demande.\n\nJe reste joignable pour toute question.",
+  cancel:
+    "Je dois malheureusement annuler notre rendez-vous. Je reviens vers vous pour en convenir d'un autre.",
+};

@@ -1,11 +1,7 @@
 import { CalendarCheck, Inbox, RotateCw } from "lucide-react";
-import type {
-  AdminAction,
-  AdminBooking,
-  AdminCommand,
-  CommandOptions,
-} from "@/lib/admin-api";
+import type { AdminAction, AdminBooking } from "@/lib/admin-api";
 import { BookingCard } from "@/components/admin/booking-card";
+import type { Resolution } from "@/components/admin/resolution-sheet";
 import { AdminButton } from "@/components/admin/admin-button";
 
 export interface BusyAction {
@@ -18,7 +14,7 @@ interface RequestsPanelProps {
   failed: boolean;
   onRetry: () => void;
   busy: BusyAction | null;
-  onAction: (command: AdminCommand, options: CommandOptions) => void;
+  onResolve: (booking: AdminBooking, resolution: Resolution) => void;
   onPlan: (booking: AdminBooking) => void;
 }
 
@@ -27,7 +23,7 @@ interface SectionProps {
   bookings: AdminBooking[];
   empty: { icon: typeof Inbox; label: string };
   busy: BusyAction | null;
-  onAction: (command: AdminCommand, options: CommandOptions) => void;
+  onResolve: (booking: AdminBooking, resolution: Resolution) => void;
   onPlan: (booking: AdminBooking) => void;
 }
 
@@ -36,7 +32,7 @@ const Section = ({
   bookings,
   empty: { icon: EmptyIcon, label },
   busy,
-  onAction,
+  onResolve,
   onPlan,
 }: SectionProps) => (
   <section className="mt-8 first:mt-0">
@@ -57,7 +53,7 @@ const Section = ({
           key={booking.id}
           booking={booking}
           busyAction={busy?.id === booking.id ? busy.action : null}
-          onAction={onAction}
+          onResolve={onResolve}
           onPlan={onPlan}
         />
       ))
@@ -78,7 +74,7 @@ export const RequestsPanel = ({
   failed,
   onRetry,
   busy,
-  onAction,
+  onResolve,
   onPlan,
 }: RequestsPanelProps) => {
   if (failed) {
@@ -104,7 +100,7 @@ export const RequestsPanel = ({
         bookings={bookings.filter(({ status }) => status === "pending")}
         empty={{ icon: Inbox, label: "Aucune demande à traiter" }}
         busy={busy}
-        onAction={onAction}
+        onResolve={onResolve}
         onPlan={onPlan}
       />
       <Section
@@ -116,7 +112,7 @@ export const RequestsPanel = ({
           )}
         empty={{ icon: CalendarCheck, label: "Aucun rendez-vous confirmé" }}
         busy={busy}
-        onAction={onAction}
+        onResolve={onResolve}
         onPlan={onPlan}
       />
     </>
