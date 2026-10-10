@@ -28,16 +28,16 @@ export const AboutSection = () => (
           stratégie adaptée à votre situation, et vous tenir informé à chaque
           étape de la procédure.
         </p>
-        <dl className="mt-2 grid grid-cols-3 border-t border-line">
+        <dl className="mt-2 grid border-t border-line sm:grid-cols-3">
           {VALUES.map(({ title, description }) => (
             <div
               key={title}
-              className="border-l border-line pt-4 pr-3 pl-3.5 first:border-l-0 first:pl-0"
+              className="flex items-baseline gap-4 border-b border-line py-3.5 sm:block sm:border-b-0 sm:border-l sm:pt-4 sm:pr-3 sm:pb-0 sm:pl-4 sm:first:border-l-0 sm:first:pl-0"
             >
-              <dt className="font-serif text-[19px] font-medium text-navy">
+              <dt className="w-28 shrink-0 font-serif text-[19px] font-medium text-navy sm:w-auto">
                 {title}
               </dt>
-              <dd className="mt-0.5 text-[13px] leading-snug text-ink-soft">
+              <dd className="text-[14px] leading-snug text-ink-soft sm:mt-0.5 sm:text-[13px]">
                 {description}
               </dd>
             </div>
