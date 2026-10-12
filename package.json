@@ -10,7 +10,8 @@
     "dev:test": "bash scripts/dev-test.sh",
     "db:reset": "npx --yes supabase@2.120.0 db reset",
     "db:stop": "npx --yes supabase@2.120.0 stop",
-    "db:types": "npx --yes supabase@2.120.0 gen types typescript --local > lib/database.types.ts"
+    "db:types": "npx --yes supabase@2.120.0 gen types typescript --local > lib/database.types.ts",
+    "indexnow": "bash scripts/indexnow.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.3",

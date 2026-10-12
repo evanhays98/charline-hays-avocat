@@ -61,6 +61,12 @@ Pour recevoir les vrais emails Brevo sur sa propre boîte : retirer `MAILPIT_URL
 
 La fonction `calendar-feed` publie les rendez-vous confirmés au format iCalendar, derrière un lien secret (`settings.calendar_token`). Dans `/admin > Disponibilités > Agenda`, Charline s'y abonne une fois (Google Agenda ou Calendrier iPhone/Mac) : les rendez-vous fixés, déplacés ou annulés s'y reflètent automatiquement. « Nouveau lien » invalide l'ancien.
 
+## Référencement
+
+- Google : Search Console (propriété de domaine `haysavocat.fr`, sitemap `https://www.haysavocat.fr/sitemap.xml`).
+- Bing, DuckDuckGo, Ecosia, Qwant : Bing Webmaster Tools, importé depuis Search Console.
+- `npm run indexnow` : signale toutes les pages du sitemap à Bing et aux moteurs IndexNow, à relancer après une modification de contenu (clé publique dans `public/<clé>.txt`).
+
 ## Mise en production
 
 ### 1. Supabase
